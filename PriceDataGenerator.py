@@ -4,6 +4,12 @@ import yfinance as yf
 import pandas as pd
 from InvalidDataError import InvalidDataError
 from SampleSizeError import SampleSizeError
+import pandas_market_calendars as mcal
+from datetime import datetime
+
+
+# Enter Stock Tickers here.
+# Note: Only works for NYSE and NASDAQ Listed Stock Tickers.
 
 stock_names = [
     "AAPL", "MSFT", "GOOGL", "TSLA", "NVDA", "INTC", "ADBE", "CSCO",
@@ -14,13 +20,29 @@ stock_names = [
     "GLW", "STX", "ANSS", "CDNS", "FLT", "DXC", "WDC", "KEYS", "NTES", "VRSN"
 ]
 
-invalid_tickers = []
-start_date = "2015-06-01"
+
+# Adjust start and end dates of the collected Data.
+
+start_date = "2017-06-01"
 end_date = "2023-06-01"
 
-def check_training_data(index, name):
 
-    rows = 2015
+invalid_tickers = []
+
+def get_trading_days(start_date, end_date):
+    # Convert input dates to datetime
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    nasdaq = mcal.get_calendar('NASDAQ')
+
+    trading_days = nasdaq.valid_days(start_date=start_date, end_date=end_date)
+
+    return len(trading_days)
+
+
+def check_training_data(index, name,start_date, end_date):
+    rows = get_trading_days(start_date,end_date)
     columns = 8
     file_path = "TrainingData\\" + str(index) + ".csv"
 
@@ -43,13 +65,14 @@ def check_training_data(index, name):
 
 
 def init_training_data(name, start_date, end_date):
-    # Fetch historical data for each stock
 
     try:
         stock = yf.Ticker(name)
-        data = stock.history(start="2015-06-01", end="2023-06-01")
+        data = stock.history(start=start_date, end=end_date)
 
-        # Calculate revenue by multiplying Close price with Volume
+        print(data)
+
+        # Estimate revenue by multiplying Close price with Volume
         data['Revenue'] = data['Close'] * data['Volume']
 
         # Group the data by week and sum the revenue
@@ -65,13 +88,11 @@ def init_training_data(name, start_date, end_date):
         # Fill missing weekly revenue values forward
         data['Revenue_Weekly'].fillna(method='ffill', inplace=True)
 
-        # Calculate daily revenue by dividing weekly revenue by 5 (assuming 5 trading days in a week)
-        data['Revenue_Daily'] = data['Revenue_Weekly'] / 5
 
         # Remove unnecessary columns
         del data['Week_Start']
         del data['Revenue_Weekly']
-        data.drop(['Stock Splits'], axis=1, inplace=True)
+        #data.drop(['Stock Splits'], axis=1, inplace=True)
         del data['Date']
 
         # Save the price history to a CSV file
@@ -79,14 +100,6 @@ def init_training_data(name, start_date, end_date):
         file_path = "TrainingData\\" + index_str + ".csv"
 
         data.to_csv(file_path, index=False, quoting=csv.QUOTE_NONE)
-
-        with open(file_path, 'r') as file:
-            lines = file.readlines()
-        with open(file_path, 'w', newline='') as file:
-            writer = csv.writer(file)
-            for line in lines[1:]:
-                if line.strip():  # Remove empty lines
-                    writer.writerow(line.strip().split(','))
 
         print(f"Data for {name} saved to {str(stock_names.index(name))}")
 
@@ -98,7 +111,7 @@ def generate_training_data():
         index = stock_names.index(name)
         try:
             init_training_data(name, start_date, end_date)
-            check_training_data(int(index), name)
+            check_training_data(int(index), name,start_date, end_date)
         except SampleSizeError as e:
             print("")
             print("Sample Size Error", e)
@@ -121,8 +134,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
 
 
