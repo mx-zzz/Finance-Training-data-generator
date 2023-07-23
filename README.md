@@ -36,14 +36,15 @@ Copy code
 The generated price data for each stock is saved in CSV format in the `TrainingData` directory.
 
 The CSV files contain the following columns:
--'Open': The opening price of the stock on that date.
--'High': The highest price of the stock on that date.
--'Low': The lowest price of the stock on that date.
--'Close': The closing price of the stock on that date.
--'Volume': The trading volume of the stock on that date.
--'Dividends': The dividends paid by the stock on that date (if available).
--'Stock Splits': The stock splits that occurred on that date (if available).
--'Estimated Revenue': The estimated revenue calculated by multiplying the Close price with the Volume. This represents the daily revenue based on stock price and trading volume.
+
+- `Open`: The opening price of the stock on that date.
+- `High`: The highest price of the stock on that date.
+- `Low`: The lowest price of the stock on that date.
+- `Close`: The closing price of the stock on that date.
+- `Volume`: The trading volume of the stock on that date.
+- `Dividends`: The dividends paid by the stock on that date (if available).
+- `Stock Splits`: The stock splits that occurred on that date (if available).
+- `Estimated Revenue`: The estimated revenue calculated by multiplying the `Close` price with the `Volume`. This represents the daily revenue based on stock price and trading volume.
 
 ## Notes
 - Ensure you have an internet connection to fetch data from Yahoo Finance.
