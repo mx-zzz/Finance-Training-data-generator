@@ -1,5 +1,3 @@
-markdown
-Copy code
 # Price Data Generator
 
 This Python script is a price data generator that fetches historical stock price data from Yahoo Finance using the `yfinance` library and saves it to CSV files. It processes the data to calculate weekly and daily revenue based on stock price and volume.
