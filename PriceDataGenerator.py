@@ -1,14 +1,12 @@
-import csv
 
+import csv
 import yfinance as yf
 import pandas as pd
-
-
 from InvalidDataError import InvalidDataError
 from SampleSizeError import SampleSizeError
 
 stock_names = [
-    "AAPL", "MSFT", "FB", "GOOGL", "TSLA", "NVDA", "INTC", "ADBE", "CSCO",
+    "AAPL", "MSFT", "GOOGL", "TSLA", "NVDA", "INTC", "ADBE", "CSCO",
     "CMCSA", "ASML", "AVGO", "TXN", "ORCL", "QCOM", "SAP", "CRM", "SHOP", "IBM",
     "AMD", "ADSK", "FIS", "ACN", "AMAT", "TMUS", "TEL", "NVZMY", "INTU", "WDAY",
     "VMW", "ATVI", "ADI", "INFY", "EA", "MTCH", "LRCX", "CTSH", "MU", "APH",
@@ -16,37 +14,35 @@ stock_names = [
     "GLW", "STX", "ANSS", "CDNS", "FLT", "DXC", "WDC", "KEYS", "NTES", "VRSN"
 ]
 
-
 invalid_tickers = []
 start_date = "2015-06-01"
 end_date = "2023-06-01"
 
-def check_feature(index,name):
+def check_training_data(index, name):
 
-    features_rows = 2015
-    features_columns = 8
-    feature_file_path = "Features\\" + str(index) + ".csv"
+    rows = 2015
+    columns = 8
+    file_path = "TrainingData\\" + str(index) + ".csv"
 
-
-    with open(feature_file_path, 'r') as feature_file:
+    with open(file_path, 'r') as file:
         lines = 0
-        feature_data = csv.reader(feature_file)
-        lines = sum(1 for line in feature_data)  # Count the number of lines
-        if lines != features_rows:
+        trainingdata = csv.reader(file)
+        lines = sum(1 for line in trainingdata)  # Count the number of lines
+        if lines != rows:
             invalid_tickers.append(name)
-            raise SampleSizeError(f"Wrong Amount of lines in Features\nShould be {features_rows}\nWas Instead: {lines}\n Ticker Name: {name}")
+            raise SampleSizeError(f"Wrong Amount of lines in TrainingData\nShould be {rows}\nWas Instead: {lines}\n Ticker Name: {name}")
 
-    with open(feature_file_path, 'r') as feature_file:
-        feature_data = csv.reader(feature_file)
-        for i in range(features_rows):
-            row = next(feature_data)
+    with open(file_path, 'r') as trainingdata_file:
+        trainingdata = csv.reader(trainingdata_file)
+        for i in range(rows):
+            row = next(trainingdata)
             column_count = len(row)
-            if features_columns != column_count:
+            if columns != column_count:
                 invalid_tickers.append(name)
-                raise SampleSizeError(f"Wrong Amount of Columns in Features\nShould be {features_columns}\nWas Instead: {column_count}\nFile Name: {str(index)}\n Ticker Name: {name}")
+                raise SampleSizeError(f"Wrong Amount of Columns in TrainingData\nShould be {columns}\nWas Instead: {column_count}\nFile Name: {str(index)}\n Ticker Name: {name}")
 
 
-def init_feature(name,start_date,end_date):
+def init_training_data(name, start_date, end_date):
     # Fetch historical data for each stock
 
     try:
@@ -80,7 +76,7 @@ def init_feature(name,start_date,end_date):
 
         # Save the price history to a CSV file
         index_str = str(stock_names.index(name))
-        file_path = "Features\\" + index_str + ".csv"
+        file_path = "TrainingData\\" + index_str + ".csv"
 
         data.to_csv(file_path, index=False, quoting=csv.QUOTE_NONE)
 
@@ -97,37 +93,36 @@ def init_feature(name,start_date,end_date):
     except TypeError as e:
         raise InvalidDataError(f"Cannot Get Data for {name}, Symbol is likely delisted or there is no data for API to retrieve")
 
-
-
-
-
-def generate_training_data() :
+def generate_training_data():
     for name in stock_names:
         index = stock_names.index(name)
         try:
-            init_feature(name, start_date, end_date)
-            check_feature(int(index), name)
+            init_training_data(name, start_date, end_date)
+            check_training_data(int(index), name)
         except SampleSizeError as e:
             print("")
             print("Sample Size Error", e)
             print("")
         except InvalidDataError as e:
+            invalid_tickers.append(name)
             print("")
             print("Invalid Data Error", e)
             print("")
         else:
             print("")
 
-    if invalid_tickers > 0:
-        print("All data correctly saved and Valid")
+    if len(invalid_tickers) > 0:
+        print("The Following Tickers are invalid: ", invalid_tickers)
     else:
-        print("The Following Tickers are invalid : ", invalid_tickers)
+        print("All data correctly saved and Valid")
 
 def main():
     generate_training_data()
 
 if __name__ == "__main__":
     main()
+
+
 
 
 
