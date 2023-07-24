@@ -40,19 +40,17 @@ Ensure you have the following installed on your system:
 
 ## Usage
 
-1. Modify the `stock_names` list in the script with the ticker symbols of the stocks you are interested in.
+1. Modify the `stock_names` list in the script with the ticker symbols of the stocks you are interested in. (NOTE: Only Works for NYSE and NASDAQ Listed Tickers.)
 
-NOTE: Only Works for NYSE and NASDAQ Listed Tickers.
+2. Modiy Start and Date times to desired period of time (OPTIONAL)
 
-3. Modiy Start and Date times to desired period of time (OPTIONAL)
-
-4. Run the script using the following command:
+3. Run the script using the following command:
 
     ```bash
     python PriceDataGenerator.py
     ```
     
-5. The script fetches historical stock price data, computes revenue, validates the data, and saves it to separate CSV files in a directory named `TrainingData`.
+4. The script fetches historical stock price data, computes revenue, validates the data, and saves it to separate CSV files in a directory named `TrainingData`.
 
 ## Errors and Exceptions
 
