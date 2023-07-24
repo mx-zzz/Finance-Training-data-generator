@@ -1,56 +1,82 @@
 # Price Data Generator
 
-This Python script is a price data generator that fetches historical stock price data from Yahoo Finance using the `yfinance` library and saves it to CSV files. It processes the data to calculate weekly and daily revenue based on stock price and volume.
+Price Data Generator is a Python script developed to fetch, process, and store historical stock price data from Yahoo Finance. The extracted data includes daily opening, closing, highest, and lowest prices, dividends, and volume for the selected stocks. Additionally, it computes the estimated daily revenue based on the stock's closing price and its trading volume.
 
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Errors and Exceptions](#errors-and-exceptions)
+- [Output](#output)
+- [Notes](#notes)
+- [Disclaimer](#disclaimer)
+
+## Features
+
+- Fetches historical price data for any given list of stocks listed on NASDAQ or NYSE.
+- Estimates daily revenue for each stock based on closing price and volume.
+- Performs data validation by comparing the number of rows and columns in each CSV file against expected values, raising appropriate errors if any discrepancies are found.
+- The output data is stored in CSV format, allowing easy import into any data analysis tool or software.
 
 ## Prerequisites
+
+Ensure you have the following installed on your system:
+
 - Python 3.x
-- `yfinance` library
-- `pandas` library
+- [yfinance](https://pypi.org/project/yfinance/) library
+- [pandas](https://pypi.org/project/pandas/) library
+- [pandas_market_calendars](https://pypi.org/project/pandas-market-calendars/)
 
 ## Installation
+
 1. Install the required libraries using pip:
-pip install yfinance pandas
 
+    ```bash
+    pip install yfinance pandas pandas_market_calendars
+    ```
 
-2. Clone or download the repository containing the script.
+2. Clone or download this repository to your local system.
 
 ## Usage
-1. Modify the `stock_names` list with the ticker symbols of the stocks you want to fetch data for.
 
-2. Run the script `PriceDataGenerator.py`.
+1. Modify the `stock_names` list in the script with the ticker symbols of the stocks you are interested in.
 
-3. The script will fetch historical stock price data for each stock in the list, calculate revenue, and save the data to separate CSV files in the `TrainingData` directory.
+2. Run the script using the following command:
 
-4. The script also performs data validation by checking the number of rows and columns in each CSV file to ensure data consistency. If any inconsistencies are found, it raises appropriate errors.
+    ```bash
+    python PriceDataGenerator.py
+    ```
 
-## Handling Errors
-- `SampleSizeError`: If the number of rows or columns in the data does not match the expected values, a `SampleSizeError` is raised, indicating the issue.
+3. The script fetches historical stock price data, computes revenue, validates the data, and saves it to separate CSV files in a directory named `TrainingData`.
 
-- `InvalidDataError`: If data cannot be fetched for a stock (e.g., symbol is delisted or no data available), an `InvalidDataError` is raised.
+## Errors and Exceptions
+
+- `SampleSizeError`: Raised when the number of rows or columns in the data does not match the expected values. It indicates issues with the data size.
+
+- `InvalidDataError`: Raised when data cannot be fetched for a stock, such as when the symbol is delisted or no data is available for the API to retrieve.
 
 ## Output
-The generated price data for each stock is saved in CSV format in the `TrainingData` directory.
 
-The CSV files contain the following columns:
+The script generates price data for each stock and saves it in CSV format in the `TrainingData` directory. Each CSV file contains the following columns:
 
-- `Open`: The opening price of the stock on that date.
-- `High`: The highest price of the stock on that date.
-- `Low`: The lowest price of the stock on that date.
-- `Close`: The closing price of the stock on that date.
-- `Volume`: The trading volume of the stock on that date.
-- `Dividends`: The dividends paid by the stock on that date (if available).
-- `Stock Splits`: The stock splits that occurred on that date (if available).
-- `Estimated Revenue`: The estimated revenue calculated by multiplying the `Close` price with the `Volume`. This represents the daily revenue based on stock price and trading volume.
+- `Open`: The opening price of the stock on a specific date.
+- `High`: The highest price the stock reached on a specific date.
+- `Low`: The lowest price the stock dropped to on a specific date.
+- `Close`: The closing price of the stock on a specific date.
+- `Volume`: The trading volume of the stock on a specific date.
+- `Dividends`: The dividends paid by the stock on a specific date (if any).
+- `Stock Splits`: The stock splits that occurred on a specific date (if any).
+- `Revenue`: The estimated daily revenue, calculated by multiplying the `Close` price with the `Volume`.
 
 ## Notes
-- Ensure you have an internet connection to fetch data from Yahoo Finance.
 
-- The script is optimized for weekly and daily revenue calculations. Additional features or data can be calculated and saved based on specific requirements.
-
-- Make sure you have permission to use the financial data according to the respective data provider's terms of service.
+- An internet connection is required to fetch data from Yahoo Finance.
+- This script is optimized for weekly and daily revenue calculations. However, you can modify it according to your specific requirements.
+- Please ensure you adhere to the terms of service of the data provider while using this data.
 
 ## Disclaimer
-This script is intended for educational and research purposes only. It is not intended for actual trading or financial analysis. Use the data responsibly and verify its accuracy before making any decisions based on it.
 
-**USE AT YOUR OWN RISK!** The authors and contributors of this script are not responsible for any financial losses or damages that may occur from its usage.
+This script is intended for educational and research purposes only. It should not be used for actual trading or financial analysis. Always verify the accuracy of the data before making any decisions based on it.
+
+**USE AT YOUR OWN RISK!** The authors and contributors of this script are not responsible for any financial losses or damages that may occur due to its usage. Always consult with a certified financial advisor before making investment decisions.
