@@ -41,6 +41,7 @@ Ensure you have the following installed on your system:
 ## Usage
 
 1. Modify the `stock_names` list in the script with the ticker symbols of the stocks you are interested in.
+
 NOTE: Only Works for NYSE and NASDAQ Listed Tickers.
 
 3. Modiy Start and Date times to desired period of time (OPTIONAL)
